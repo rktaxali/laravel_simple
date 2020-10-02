@@ -9,9 +9,17 @@ const mix = require('laravel-mix');
  | for your Laravel applications. By default, we are compiling the CSS
  | file for the application as well as bundling up all the JS files.
  |
- */
 
+ original code 
 mix.js('resources/js/app.js', 'public/js')
     .postCss('resources/css/app.css', 'public/css', [
         //
     ]);
+  .scss('resources/sass/app.scss', 'public/css');
+
+mix.js('resources/js/app.js', 'public/js')
+.sass('resources/sass/app.scss', 'public/css');
+ */
+
+mix.js('resources/js/app.js', 'public/js')
+    .sass('resources/sass/app.scss', 'public/css');

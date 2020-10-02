@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -25,8 +27,42 @@ Route::get('/welcome', function () {
 
 
 Route::get('/about', function () {
-    return view('about');
+	//$articles = App\Models\Article::all();   // get all articles 
+	//$articles = App\Models\Article::paginate(2);   // get all articles, paginate with 2 items per page
+	//$articles = App\Models\Article::take(3)->get();  // get first 3 articles 
+	//$articles = App\Models\Article::latest()->get();   // get all articles in descending order of created_at
+	//$articles = App\Models\Article::latest('updated_at')->get();   // get all articles in descending order of updated_at
+
+	$articles = App\Models\Article::take(3)->latest('updated_at')->get();   // latest 3 articles based on updated_at field
+	
+
+	return view('about',
+				[
+					'articles'=>$articles,
+				]
+
+			);
 });
+
+
+// Called when url contains articles but not articles/{{articleID}}
+/* Route::get('/articles', function () {
+	$articles = App\Models\Article::paginate(2);    // paginate with 2 articles per page
+	return view('articles', ['articles'=>$articles,	] );
+});
+ */
+use App\Http\Controllers\ArticlesController;
+Route::get('/articles', 'App\Http\Controllers\articlesController@index');
+Route::post('/articles', 'App\Http\Controllers\articlesController@store');
+//Route::get('/articles/create', 'App\Http\Controllers\articlesController@create');  // note /articles/{article} must be at the end
+
+Route::get('/articles/create', [ArticlesController::class, 'create']);  
+// Note: This method requires use App\Http\Controllers\ArticlesController; to be specified prior to executing this command
+
+Route::get('/articles/{article}', 'App\Http\Controllers\articlesController@show');
+Route::get('/articles/{article}/edit', 'App\Http\Controllers\articlesController@edit');
+Route::put('/articles/{article}', 'App\Http\Controllers\articlesController@update');
+
 
 
 /***
