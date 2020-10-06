@@ -52,14 +52,21 @@ Route::get('/about', function () {
 });
  */
 use App\Http\Controllers\ArticlesController;
-Route::get('/articles', 'App\Http\Controllers\articlesController@index');
+
+//Route::get('/articles', 'App\Http\Controllers\articlesController@index');  // unnamed route
+Route::get('/articles', 'App\Http\Controllers\articlesController@index')->name('articles.index');  // named route
+
+
+
 Route::post('/articles', 'App\Http\Controllers\articlesController@store');
 //Route::get('/articles/create', 'App\Http\Controllers\articlesController@create');  // note /articles/{article} must be at the end
 
 Route::get('/articles/create', [ArticlesController::class, 'create']);  
 // Note: This method requires use App\Http\Controllers\ArticlesController; to be specified prior to executing this command
 
-Route::get('/articles/{article}', 'App\Http\Controllers\articlesController@show');
+//Route::get('/articles/{article}', 'App\Http\Controllers\articlesController@show');
+Route::get('/articles/{article}', 'App\Http\Controllers\articlesController@show')->name('articles.show');
+
 Route::get('/articles/{article}/edit', 'App\Http\Controllers\articlesController@edit');
 Route::put('/articles/{article}', 'App\Http\Controllers\articlesController@update');
 

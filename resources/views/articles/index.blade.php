@@ -19,14 +19,17 @@
                     </ul>
                 </div>
             </div>
+
             <!-- required to display pagination links -->
+
             <div class="row">
                 <div class="col-12">
                     <div class="d-flex justify-content-center">
-                        {!! $articles->links() !!}
+                         {!! $articles->links() !!}
                     </div>
                 </div>
-            </div>	
+            </div> 
+
 		</div>
 		
 	</div>

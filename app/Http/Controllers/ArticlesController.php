@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Article;
+use App\Models\Tag;
+
 
 class ArticlesController extends Controller
 {
@@ -24,11 +26,29 @@ class ArticlesController extends Controller
     }
 
     // display all articles on articles.blade.php
-    public function index()
+    public function index(Request $request)
     {
-        // fetch articles through paginate with 2 articles/page
-        $articles = Article::paginate(2);
-       return view('articles.index',['articles'=>$articles]);  // view file: articles/index.blade.php
+        $articles = null;
+        $tagname = null;
+        if (! empty($request->input('tag')))
+        {
+            $view = 'articles.all_articles';
+            $tagname = $request->input('tag');
+            $tag =  Tag::where('name',$request->input('tag'))->first();
+            if (! empty($tag))
+            {
+                $articles = $tag->articles->all();
+            }
+        }
+        else
+        {
+            // fetch articles through paginate with 2 articles/page
+            //   $articles = Article::all(); //       
+           $articles =  Article::paginate(2);
+           $view = 'articles.index';
+        }
+        
+       return view($view,['articles'=>$articles, 'tagname'=>$tagname]);  // view file: articles/index.blade.php
     }
 
     
@@ -64,20 +84,16 @@ class ArticlesController extends Controller
             'body' => ['required'],
         ]);
 
-        /* 
-        // validate data. All fields are required 
-        request()->validate([
-            'title' => 'requried',
-            'excerpt' => 'required',
-            'body' => 'required'
-        ]);
-  */
-
+    /* 
         $article = new Article();
         $article->title = $request->input('title'); 
         $article->body = $request->input('body'); ;
         $article->excerpt = $request->input('excerpt'); ;
         $article->save();
+
+ */
+        Article::create( $validatedData);
+
         return redirect('/articles');
 
     }
@@ -102,6 +118,9 @@ class ArticlesController extends Controller
         $article->excerpt = request('excerpt');
         $article->body = request('body');
         $article->save();
+
+    
+
         return redirect('/articles/' . $article->id);
       }
 
